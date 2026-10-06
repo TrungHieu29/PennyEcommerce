@@ -1,0 +1,41 @@
+@model PennyEcommerce.Models.Product
+
+<div class="container mt-4">
+    <h2 class="mb-4">Xóa sản phẩm</h2>
+
+    <div class="col-md-6">
+        <p>
+            Bạn có chắc muốn xóa
+            <strong>@Model.Name</strong> không?
+        </p>
+
+        <table class="table table-bordered">
+            <tr>
+                <th>Tên</th>
+                <td>@Model.Name</td>
+            </tr>
+
+            <tr>
+                <th>Giá</th>
+                <td>@Model.Price</td>
+            </tr>
+
+            <tr>
+                <th>Số lượng</th>
+                <td>@Model.StockQuantity</td>
+            </tr>
+        </table>
+
+        <form asp-action="DeleteConfirmed" method="post">
+            <input type="hidden" asp-for="Id" />
+
+            <button type="submit" class="btn btn-danger">
+                Xóa
+            </button>
+
+            <a asp-action="Index" class="btn btn-secondary">
+                Hủy
+            </a>
+        </form>
+    </div>
+</div>

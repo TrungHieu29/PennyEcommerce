@@ -1,0 +1,46 @@
+@model PennyEcommerce.Models.Product
+
+@{
+    ViewData["Title"] = "Edit Product";
+}
+
+<div class="product-page">
+    <h2>Sửa sản phẩm</h2>
+
+    <form asp-action="Edit" method="post" class="product-form">
+
+        <input type="hidden" asp-for="Id" />
+
+        <div class="form-group">
+            <label asp-for="Name">Tên sản phẩm</label>
+            <input asp-for="Name" />
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Price">Giá</label>
+            <input asp-for="Price" />
+        </div>
+
+        <div class="form-group">
+            <label asp-for="StockQuantity">Số lượng</label>
+            <input asp-for="StockQuantity" />
+        </div>
+
+        <div class="form-group">
+            <label>
+                <input asp-for="IsActive" style="width:auto;" />
+                Hoạt động
+            </label>
+        </div>
+
+        <div class="actions">
+            <button type="submit" class="simple-button">
+                Lưu
+            </button>
+
+            <a asp-action="Index" class="simple-link">
+                Quay lại
+            </a>
+        </div>
+    </form>
+</div>

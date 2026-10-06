@@ -1,0 +1,55 @@
+@model List<PennyEcommerce.Models.Product>
+
+@{
+    ViewData["Title"] = "Products";
+}
+
+<div class="product-page">
+
+    <div class="product-header">
+        <h2>Danh sách sản phẩm</h2>
+        <a asp-action="Create" class="simple-link">
+            Thêm sản phẩm
+        </a>
+    </div>
+
+    <table class="product-table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Tên</th>
+                <th>Giá</th>
+                <th>Số lượng</th>
+                <th>Hoạt động</th>
+                <th>Chức năng</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            @foreach (var product in Model)
+            {
+                <tr>
+                    <td>@product.Id</td>
+                    <td>@product.Name</td>
+                    <td>@product.Price</td>
+                    <td>@product.StockQuantity</td>
+                    <td>@product.IsActive</td>
+
+                    <td>
+                        <div class="actions">
+                            <a asp-action="Details" asp-route-id="@product.Id">
+                                Chi tiết
+                            </a>
+                            <a asp-action="Edit" asp-route-id="@product.Id">
+                                Sửa
+                            </a>
+                            <a asp-action="Delete" asp-route-id="@product.Id">
+                                Xóa
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

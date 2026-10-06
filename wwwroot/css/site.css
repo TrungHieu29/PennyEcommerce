@@ -1,0 +1,71 @@
+.product-page {
+  max-width: 900px;
+  margin: 30px auto;
+}
+
+.product-page h2 {
+  margin-bottom: 20px;
+}
+
+.product-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.product-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.product-table th,
+.product-table td {
+  border: 1px solid #ccc;
+  padding: 10px 12px;
+  text-align: left;
+}
+
+.product-table th {
+  background: #f3f3f3;
+}
+
+.simple-link,
+.simple-button {
+  display: inline-block;
+  padding: 6px 12px;
+  border: 1px solid #999;
+  background: white;
+  color: #222;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.simple-link:hover,
+.simple-button:hover {
+  background: #eee;
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 5px;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 7px;
+  border: 1px solid #bbb;
+}
+
+.product-form {
+  max-width: 500px;
+}
+
+.actions {
+  display: flex;
+  gap: 8px;
+}

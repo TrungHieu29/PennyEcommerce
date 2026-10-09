@@ -1,29 +1,32 @@
 using Microsoft.AspNetCore.Mvc;
 
 using PennyEcommerce.Models;
+using PennyEcommerce.Services;
 
 public class ProductController : Controller
 {
-    private readonly AppDbContext _context;
+    private readonly IProductService _productService;
 
-    public ProductController(AppDbContext context)
+    public ProductController(IProductService productService)
     {
-        _context = context;
+        _productService = productService;
     }
 
     public IActionResult Index()
     {
-        var products = _context.Products.ToList();
+        var products = _productService.GetAllProducts();
         return View(products);
     }
 
     public IActionResult Details(int id)
     {
-        var product = _context.Products.Find(id);
+        var product = _productService.GetProductById(id);
+
         if (product == null)
         {
             return NotFound();
         }
+
         return View(product);
     }
 
@@ -39,8 +42,7 @@ public class ProductController : Controller
     {
         if (ModelState.IsValid)
         {
-            _context.Products.Add(product);
-            _context.SaveChanges();
+            _productService.AddProduct(product);
 
             return RedirectToAction(nameof(Index));
         }
@@ -50,7 +52,7 @@ public class ProductController : Controller
     [HttpGet]
     public IActionResult Edit(int id)
     {
-        var product = _context.Products.Find(id);
+        var product = _productService.GetProductById(id);
 
         if (product == null)
         {
@@ -66,9 +68,7 @@ public class ProductController : Controller
     {
         if (ModelState.IsValid)
         {
-            _context.Products.Update(product);
-            _context.SaveChanges();
-
+            _productService.UpdateProduct(product);
             return RedirectToAction(nameof(Index));
         }
 
@@ -78,7 +78,7 @@ public class ProductController : Controller
     [HttpGet]
     public IActionResult Delete(int id)
     {
-        var product = _context.Products.Find(id);
+        var product = _productService.GetProductById(id);
 
         if (product == null)
         {
@@ -91,13 +91,7 @@ public class ProductController : Controller
     [ValidateAntiForgeryToken]
     public IActionResult DeleteConfirmed(int id)
     {
-        var product = _context.Products.Find(id);
-
-        if (product != null)
-        {
-            _context.Products.Remove(product);
-            _context.SaveChanges();
-        }
+        _productService.DeleteProduct(id);
 
         return RedirectToAction(nameof(Index));
     }

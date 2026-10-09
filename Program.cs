@@ -1,4 +1,6 @@
 using Microsoft.EntityFrameworkCore;
+using PennyEcommerce.Services;
+using PennyEcommerce.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,7 +12,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
         builder.Configuration.GetConnectionString("DefaultConnection")
     )
 );
-
+builder.Services.AddScoped<IProductService, ProductService>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -28,9 +30,11 @@ app.UseAuthorization();
 
 app.MapStaticAssets();
 
+app.UseMiddleware<ProductMaintenanceMiddleware>();
+
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}")
+    pattern: "{controller=Home}/{action=Index}/{id:int?}")
     .WithStaticAssets();
 
 

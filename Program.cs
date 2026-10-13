@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using PennyEcommerce.Services;
 using PennyEcommerce.Middlewares;
+using PennyEcommerce.Services.Auth;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,6 +14,8 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     )
 );
 builder.Services.AddScoped<IProductService, ProductService>();
+builder.Services.AddScoped<PasswordService>();
+builder.Services.AddScoped<IAuthService, AuthService>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

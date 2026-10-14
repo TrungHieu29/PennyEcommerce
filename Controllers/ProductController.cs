@@ -1,5 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
-
+using Microsoft.AspNetCore.Authorization;
 using PennyEcommerce.Models;
 using PennyEcommerce.Services;
 
@@ -31,12 +31,14 @@ public class ProductController : Controller
     }
 
     [HttpGet]
+    [Authorize(Roles = "Admin")]
     public IActionResult Create()
     {
         return View();
     }
 
     [HttpPost]
+    [Authorize(Roles = "Admin")]
     [ValidateAntiForgeryToken]
     public IActionResult Create(Product product)
     {
@@ -50,6 +52,7 @@ public class ProductController : Controller
     }
 
     [HttpGet]
+    [Authorize(Roles = "Admin")]
     public IActionResult Edit(int id)
     {
         var product = _productService.GetProductById(id);
@@ -63,6 +66,7 @@ public class ProductController : Controller
     }
 
     [HttpPost]
+    [Authorize(Roles = "Admin")]
     [ValidateAntiForgeryToken]
     public IActionResult Edit(Product product)
     {
@@ -76,6 +80,7 @@ public class ProductController : Controller
     }
 
     [HttpGet]
+    [Authorize(Roles = "Admin")]
     public IActionResult Delete(int id)
     {
         var product = _productService.GetProductById(id);
@@ -88,6 +93,7 @@ public class ProductController : Controller
     }
 
     [HttpPost]
+    [Authorize(Roles = "Admin")]
     [ValidateAntiForgeryToken]
     public IActionResult DeleteConfirmed(int id)
     {

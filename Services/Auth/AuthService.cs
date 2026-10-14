@@ -34,6 +34,11 @@ public class AuthService : IAuthService
             return false;
         }
 
+        var userRole = await _context.Roles.SingleOrDefaultAsync(r => r.NormalizedName == "USER");
+        if (userRole == null)
+        {
+            throw new InvalidOperationException("Role User chưa được tạo trong cơ sở dữ liệu.");
+        }
         var result = _passwordService.HashPassword(password);
 
         var user = new AppUser
@@ -44,12 +49,18 @@ public class AuthService : IAuthService
             PasswordSalt = result.Salt,
             PasswordIterations = result.Iterations
         };
-
-        _context.Users.Add(user);
-
+        await using var transaction = await _context.Database.BeginTransactionAsync();
         try
         {
+            _context.Users.Add(user);
             await _context.SaveChangesAsync();
+            _context.UserRoles.Add(new AppUserRole
+            {
+                UserId = user.Id,
+                RoleId = userRole.Id
+            });
+            await _context.SaveChangesAsync();
+            await transaction.CommitAsync();
             return true;
         }
         catch (DbUpdateException ex) when (
@@ -89,5 +100,17 @@ public class AuthService : IAuthService
         }
 
         return user;
+    }
+    public async Task<List<string>> GetUserRolesAsync(int userId)
+    {
+        var roles = await _context.UserRoles
+            .Where(ur => ur.UserId == userId)
+            .Join(_context.Roles,
+                ur => ur.RoleId,
+                r => r.Id,
+                (ur, r) => r.Name)
+            .ToListAsync();
+
+        return roles;
     }
 }

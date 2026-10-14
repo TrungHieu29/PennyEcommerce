@@ -69,7 +69,11 @@ public class AuthController : Controller
             new Claim(ClaimTypes.Name, user.Email),
             new Claim(ClaimTypes.Email, user.Email)
         };
-
+        var roles = await _authService.GetUserRolesAsync(user.Id);
+        foreach (var role in roles)
+        {
+            claims.Add(new Claim(ClaimTypes.Role, role));
+        }
 
         var identity = new ClaimsIdentity(
             claims,
@@ -95,5 +99,11 @@ public class AuthController : Controller
         );
 
         return RedirectToAction("Index", "Home");
+    }
+
+    [HttpGet]
+    public IActionResult AccessDenied()
+    {
+        return View();
     }
 }

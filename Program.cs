@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using PennyEcommerce.Services;
 using PennyEcommerce.Middlewares;
 using PennyEcommerce.Services.Auth;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,6 +14,20 @@ builder.Services.AddDbContext<AppDbContext>(options =>
         builder.Configuration.GetConnectionString("DefaultConnection")
     )
 );
+builder.Services.AddAuthentication(
+    CookieAuthenticationDefaults.AuthenticationScheme
+)
+.AddCookie(options =>
+{
+    options.LoginPath = "/Auth/Login";
+
+    options.ExpireTimeSpan = TimeSpan.FromMinutes(60);
+
+    options.SlidingExpiration = true;
+
+    options.Cookie.HttpOnly = true;
+    options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+});
 builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<PasswordService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
@@ -28,7 +43,7 @@ if (!app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseRouting();
-
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapStaticAssets();

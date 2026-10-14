@@ -59,4 +59,35 @@ public class AuthService : IAuthService
             return false;
         }
     }
+
+    public async Task<AppUser?> LoginAsync(string email, string password)
+    {
+        if (string.IsNullOrWhiteSpace(email) ||
+            string.IsNullOrWhiteSpace(password))
+        {
+            return null;
+        }
+        string normalizedEmail = email.Trim().ToUpperInvariant();
+
+        var user = await _context.Users.FirstOrDefaultAsync(u => u.NormalizedEmail == normalizedEmail);
+
+        if (user == null || !user.IsActive)
+        {
+            return null;
+        }
+
+        bool isValid = _passwordService.VerifyPassword(
+            password,
+            user.PasswordHash,
+            user.PasswordSalt,
+            user.PasswordIterations
+        );
+
+        if (!isValid)
+        {
+            return null;
+        }
+
+        return user;
+    }
 }

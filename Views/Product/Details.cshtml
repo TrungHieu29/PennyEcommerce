@@ -35,10 +35,15 @@
     </table>
 
     <div class="actions" style="margin-top: 15px;">
-        <a asp-action="Edit" asp-route-id="@Model.Id" class="simple-link">
-            Sửa
-        </a>
-
+        @if (User.IsInRole("Admin"))
+        {
+            <a asp-action="Edit" asp-route-id="@Model.Id" class="simple-link">
+                Sửa
+            </a>
+            <a asp-action="Delete" asp-route-id="@Model.Id" class="simple-link">
+                Xóa
+            </a>
+        }
         <a asp-action="Index" class="simple-link">
             Quay lại
         </a>

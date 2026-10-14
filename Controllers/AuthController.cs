@@ -34,11 +34,13 @@ public class AuthController : Controller
         return RedirectToAction("Index", "Home");
     }
     [HttpGet]
-    public IActionResult Login()
+    public IActionResult Login(string? returnUrl = null)
     {
-        return View();
+        return View(new LoginViewModel
+        {
+            ReturnUrl = returnUrl
+        });
     }
-
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Login(LoginViewModel model)
@@ -86,7 +88,11 @@ public class AuthController : Controller
             CookieAuthenticationDefaults.AuthenticationScheme,
             principal
         );
-
+        if (!string.IsNullOrWhiteSpace(model.ReturnUrl)
+            && Url.IsLocalUrl(model.ReturnUrl))
+        {
+            return LocalRedirect(model.ReturnUrl);
+        }
         return RedirectToAction("Index", "Home");
     }
 

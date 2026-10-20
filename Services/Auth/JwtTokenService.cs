@@ -28,7 +28,12 @@ public class JwtTokenService
             new("email", user.Email)
         };
         claims.AddRange(roles.Select(role => new Claim("role", role)));
-
+        if (roles.Contains("Admin"))
+        {
+            claims.Add(
+                new Claim("permission", "products.create")
+            );
+        }
         var payload = new JwtPayload(
             _configuration["Jwt:Issuer"],
             _configuration["Jwt:Audience"],

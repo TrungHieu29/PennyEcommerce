@@ -32,7 +32,7 @@ public class ProductsApiController : ControllerBase
     }
 
     [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin")]
+    [Authorize(Policy = "CanCreateProducts")]
     public IActionResult Create([FromBody] Product product)
     {
         _productService.AddProduct(product);

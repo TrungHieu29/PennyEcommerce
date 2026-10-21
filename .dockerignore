@@ -1,0 +1,12 @@
+**/bin/
+**/obj/
+.git/
+.vs/
+.vscode/
+.env
+.env.*
+docker.env
+docker.env.*
+*.user
+*.suo
+docker.env

@@ -81,6 +81,10 @@ builder.Services.AddAuthorization(options =>
     {
         policy.RequireRole("Admin");
     });
+    options.AddPolicy("CanCreateProducts", policy =>
+    {
+        policy.RequireClaim("permission", "products.create");
+    });
 });
 
 var app = builder.Build();

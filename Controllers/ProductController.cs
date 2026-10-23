@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using PennyEcommerce.Models;
 using PennyEcommerce.Services;
+using Microsoft.EntityFrameworkCore;
 
 public class ProductController : Controller
 {
@@ -72,8 +73,19 @@ public class ProductController : Controller
     {
         if (ModelState.IsValid)
         {
-            _productService.UpdateProduct(product);
-            return RedirectToAction(nameof(Index));
+            try
+            {
+                _productService.UpdateProduct(product);
+                return RedirectToAction(nameof(Index));
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                ModelState.AddModelError(
+                    "",
+                    "Sản phẩm đã được người khác cập nhật. Hãy tải lại trang."
+                );
+                return View(product);
+            }
         }
 
         return View(product);
@@ -100,5 +112,13 @@ public class ProductController : Controller
         _productService.DeleteProduct(id);
 
         return RedirectToAction(nameof(Index));
+    }
+
+    [HttpGet]
+    public IActionResult Summary()
+    {
+        var products = _productService.GetProductSummaries();
+
+        return Json(products);
     }
 }

@@ -21,4 +21,8 @@ public class Product
     public int? StockQuantity { get; set; }
 
     public bool IsActive { get; set; } = true;
+    public bool IsDeleted { get; set; } = false;
+
+    [Timestamp]
+    public byte[] RowVersion { get; set; } = [];
 }

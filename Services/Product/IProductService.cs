@@ -11,4 +11,12 @@ public interface IProductService
     void UpdateProduct(Product product);
 
     void DeleteProduct(int id);
+
+    List<ProductSummaryDto> GetProductSummaries();
 }
+
+public record ProductSummaryDto(
+    int Id,
+    string Name,
+    decimal? Price
+);

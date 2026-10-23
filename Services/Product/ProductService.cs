@@ -1,5 +1,6 @@
 using PennyEcommerce.Models;
 using PennyEcommerce.Services;
+using Microsoft.EntityFrameworkCore;
 
 public class ProductService : IProductService
 {
@@ -12,12 +13,12 @@ public class ProductService : IProductService
 
     public List<Product> GetAllProducts()
     {
-        return _context.Products.ToList();
+        return _context.Products.AsNoTracking().ToList();
     }
 
     public Product? GetProductById(int id)
     {
-        return _context.Products.Find(id);
+        return _context.Products.AsNoTracking().FirstOrDefault(p => p.Id == id);
     }
 
     public void AddProduct(Product product)
@@ -28,17 +29,44 @@ public class ProductService : IProductService
 
     public void UpdateProduct(Product product)
     {
-        _context.Products.Update(product);
+        var existing = _context.Products
+            .FirstOrDefault(p => p.Id == product.Id);
+
+        if (existing == null)
+            return;
+
+        existing.Name = product.Name;
+        existing.Price = product.Price;
+        existing.StockQuantity = product.StockQuantity;
+        existing.IsActive = product.IsActive;
+        _context.Entry(existing)
+            .Property(p => p.RowVersion)
+            .OriginalValue = product.RowVersion;
         _context.SaveChanges();
     }
 
     public void DeleteProduct(int id)
     {
-        var product = GetProductById(id);
-        if (product != null)
-        {
-            _context.Products.Remove(product);
-            _context.SaveChanges();
-        }
+        var product = _context.Products
+            .FirstOrDefault(p => p.Id == id);
+
+        if (product == null)
+            return;
+
+        product.IsDeleted = true;
+
+        _context.SaveChanges();
+    }
+
+    public List<ProductSummaryDto> GetProductSummaries()
+    {
+        return _context.Products
+            .AsNoTracking()
+            .Select(p => new ProductSummaryDto(
+                p.Id,
+                p.Name,
+                p.Price
+            ))
+            .ToList();
     }
 }

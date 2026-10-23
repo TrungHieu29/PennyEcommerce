@@ -54,5 +54,8 @@ public class AppDbContext : DbContext
             .WithMany()
             .HasForeignKey(token => token.UserId)
             .OnDelete(DeleteBehavior.Cascade);
+
+        modelBuilder.Entity<Product>()
+            .HasQueryFilter(p => !p.IsDeleted);
     }
 }
